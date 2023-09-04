@@ -6,27 +6,27 @@ const data = {
     arr:
     [
         {
-            img: 'images/nathan-anderson-fcZIyU-nbFE-unsplash.jpg',
+            img: 'images/img1.jpg',
             name: 'P-1',
             info: 'hehe',
         },
         {
-            img: 'images/nathan-anderson-fcZIyU-nbFE-unsplash.jpg',
+            img: 'images/img1.jpg',
             name: 'P-2',
             info: 'hehe',
         },
         {
-            img: 'images/nathan-anderson-fcZIyU-nbFE-unsplash.jpg',
+            img: 'images/img1.jpg',
             name: 'P-3',
             info: 'hehe',
         },
         {
-            img: 'images/nathan-anderson-fcZIyU-nbFE-unsplash.jpg',
+            img: 'images/img1.jpg',
             name: 'P-4',
             info: 'hehe',
         },
         {
-            img: 'images/nathan-anderson-fcZIyU-nbFE-unsplash.jpg',
+            img: 'images/img1.jpg',
             name: 'P-5',
             info: 'hehe',
         }
@@ -111,7 +111,10 @@ function fillRowsWithProjects() {
         bigCol.classList.add('clickable');
         smallCol.classList.add('clickable');
         smallEyeCol.classList.add('clickable');
-        insertVideo(bigCol);
+        bigCol.style.backgroundImage = `url(${data.arr[i].img})`;
+        bigCol.style.backgroundRepeat = 'no-repeat';
+        bigCol.style.backgroundSize = 'contain';
+        // insertVideo(bigCol);
         console.log(data.arr[i].img);
         smallCol.textContent = data.arr[i].name;
         smallEyeCol.textContent = 'e';
@@ -186,6 +189,13 @@ function handleEyeClick(clickables) {
             const cross = document.querySelector(`.small-0${r}1`)
             cross.textContent = 'C';
             cross.classList.add('cross-click');
+            gsap.to(row, {
+                duration: 0.75,
+                height: '105vh',
+                onComplete: () => {
+                  fillInfoAfterExpanding(r, c);
+                }
+              }); 
             // row.style.height = '100vh';
             if (c<2) {
                 smallRow.style.gridTemplateColumns = '1.5% 72.375% 1.5% 23.125% 1.5%';
@@ -194,10 +204,10 @@ function handleEyeClick(clickables) {
                 const bigColTop = document.querySelector(`.large-0${r}0`);
                 bigCol.classList.add('cross-click');
                 bigColTop.classList.add('cross-click');
-                // bigCol.style.backgroundImage = `url(${data.arr[r].img})`;
-                // bigCol.style.backgroundRepeat = 'no-repeat';
-                insertVideo(bigCol);
-                gsap.to(bigCol, {duration: 0.5, backgroundSize: '100%'});
+                bigCol.style.backgroundImage = `url(${data.arr[r].img})`;
+                bigCol.style.backgroundRepeat = 'no-repeat';
+                // insertVideo(bigCol);
+                gsap.to(bigCol, {duration: 0.5, backgroundSize: 'cover'});
                 gsap.to(bigColTop, {duration: 1, backgroundColor: '#212121'});
 
             }
@@ -208,19 +218,15 @@ function handleEyeClick(clickables) {
                 const bigColTop = document.querySelector(`.large-0${r}1`);
                 bigCol.classList.add('cross-click');
                 bigColTop.classList.add('cross-click');
-                insertVideo(bigCol);
-                gsap.to(bigCol, {duration: 0.5, backgroundSize: '100%'});
+                bigCol.style.backgroundImage = `url(${data.arr[r].img})`;
+                bigCol.style.backgroundRepeat = 'no-repeat';
+                // insertVideo(bigCol);
+                gsap.to(bigCol, {duration: 0.5, backgroundSize: 'cover'});
                 gsap.to(bigColTop, {duration: 1, backgroundColor: '#212121'});
 
             }
 
-            gsap.to(row, {
-                duration: 0.75,
-                height: '105vh',
-                onComplete: () => {
-                  fillInfoAfterExpanding(r, c);
-                }
-              }); 
+            
             // fillInfoAfterExpanding(r,c);
     
             crossClick = document.querySelectorAll('.cross-click');
@@ -361,13 +367,16 @@ function fillRowAfterClick(r,c) {
     let smallCol = document.querySelector(`.large-0${r}${c}`);
     let smallEyeCol;
     if(c > 1) smallEyeCol = document.querySelector(`.small-0${r}${c}`);
-    else smallEyeCol = document.querySelector(`.small-0${r}${c++}`);
+    else smallEyeCol = document.querySelector(`.small-0${r}${c}`);
 
     bigCol.classList.add('clickable');
     smallCol.classList.add('clickable');
     smallEyeCol.classList.add('clickable');
 
-    insertVideo(bigCol);
+    // insertVideo(bigCol);
+    bigCol.style.backgroundImage = `url(${data.arr[r].img})`;
+    bigCol.style.backgroundRepeat = 'no-repeat';
+    bigCol.style.backgroundSize = 'cover';
     console.log(data.arr[r].img);
     smallCol.textContent = data.arr[r].name;
     smallEyeCol.textContent = 'e';
