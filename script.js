@@ -100,7 +100,7 @@ function getRandomInt(min, max) {
 }
 
 function fillRowsWithProjects() {
-     for(let i=0; i<5; i++){
+     for(let i=0, j=1; i<5; i++,j++){
         const randomBigCol = getRandomInt(0, 3); 
         let bigCol = document.querySelector(`.large-1${i}${randomBigCol}`);
         let smallCol = document.querySelector(`.large-0${i}${randomBigCol}`);
@@ -111,15 +111,29 @@ function fillRowsWithProjects() {
         bigCol.classList.add('clickable');
         smallCol.classList.add('clickable');
         smallEyeCol.classList.add('clickable');
-
-        bigCol.style.backgroundImage = `url(${data.arr[i].img})`;
-        bigCol.style.backgroundSize = 'cover'
+        insertVideo(bigCol);
         console.log(data.arr[i].img);
         smallCol.textContent = data.arr[i].name;
         smallEyeCol.textContent = 'e';
 
         initialPositions.push([i,randomBigCol]);
      }
+}
+
+function insertVideo(bigCol) {
+    bigCol.style.backgroundColor = 'rgba(210, 180, 140, 1)';
+    bigCol.style.display = 'flex';
+    bigCol.style.justifyContent = 'center';
+
+    const video = document.createElement('video');
+    video.src = `videos/video0.mp4`;
+    video.controls = false;
+    video.muted = true;
+    video.style.width = '90%';
+    video.style.height = '100%';
+    video.autoplay = true;
+    video.loop = true;
+    bigCol.appendChild(video);
 }
 
 let crossClick;
@@ -168,8 +182,7 @@ function handleEyeClick(clickables) {
                 largeRow.appendChild(bigDiv);
             }
     
-            gsap.to(row, {duration: 1.5, height: '100vh'}, 0);
-            
+                     
             const cross = document.querySelector(`.small-0${r}1`)
             cross.textContent = 'C';
             cross.classList.add('cross-click');
@@ -181,9 +194,12 @@ function handleEyeClick(clickables) {
                 const bigColTop = document.querySelector(`.large-0${r}0`);
                 bigCol.classList.add('cross-click');
                 bigColTop.classList.add('cross-click');
-                bigCol.style.backgroundImage = `url(${data.arr[r].img})`;
-                bigCol.style.backgroundRepeat = 'no-repeat';
-                gsap.to(bigCol, {duration: 1.5, backgroundSize: '100%'},0);
+                // bigCol.style.backgroundImage = `url(${data.arr[r].img})`;
+                // bigCol.style.backgroundRepeat = 'no-repeat';
+                insertVideo(bigCol);
+                gsap.to(bigCol, {duration: 0.5, backgroundSize: '100%'});
+                gsap.to(bigColTop, {duration: 1, backgroundColor: '#212121'});
+
             }
             else {
                 smallRow.style.gridTemplateColumns = '1.5% 23.125% 1.5% 72.375% 1.5%';
@@ -192,16 +208,100 @@ function handleEyeClick(clickables) {
                 const bigColTop = document.querySelector(`.large-0${r}1`);
                 bigCol.classList.add('cross-click');
                 bigColTop.classList.add('cross-click');
-                bigCol.style.backgroundImage = `url(${data.arr[r].img})`;
-                bigCol.style.backgroundRepeat = 'no-repeat';
-                gsap.to(bigCol, {duration: 1.5, backgroundSize: 'cover'},0);
+                insertVideo(bigCol);
+                gsap.to(bigCol, {duration: 0.5, backgroundSize: '100%'});
+                gsap.to(bigColTop, {duration: 1, backgroundColor: '#212121'});
+
             }
+
+            gsap.to(row, {
+                duration: 0.75,
+                height: '105vh',
+                onComplete: () => {
+                  fillInfoAfterExpanding(r, c);
+                }
+              }); 
+            // fillInfoAfterExpanding(r,c);
     
             crossClick = document.querySelectorAll('.cross-click');
             handleCrossClick();
         });
     });
     
+}
+
+function fillInfoAfterExpanding(r,c) {
+    let largeCol;
+    let largeColTop
+    if(c<2) {
+        largeCol = document.querySelector(`.large-1${r}${1}`);
+        largeColTop = document.querySelector(`.large-0${r}${1}`);
+    }
+    else {
+        largeCol = document.querySelector(`.large-1${r}${0}`);
+        largeColTop = document.querySelector(`.large-0${r}${0}`);
+    }
+
+    const desc = document.createElement('div');
+    const descInfo = document.createElement('div');
+    const seeQuesBtn = document.createElement('div');
+
+    descInfo.textContent = 'Designed and developed a sleek portfolio website to showcase creative work. Created a user-friendly interface, integrated social media links, and ensured optimal loading speed for an engaging user experience.';
+    seeQuesBtn.textContent = 'SEE QUESTIONS';
+
+    descInfo.classList.add('desc-info');
+    seeQuesBtn.classList.add('see-ques-btn');
+    desc.classList.add('desc');
+
+    desc.appendChild(descInfo);
+    desc.appendChild(seeQuesBtn);
+
+    const status = document.createElement('div');
+    const statusTop = document.createElement('div');
+    const statusBottom = document.createElement('div');
+
+    const div00 = document.createElement('div');
+    const div01 = document.createElement('div');
+    div00.textContent = 'STATUS';
+    div01.textContent = 'COMPLETED';
+
+    const div10 = document.createElement('div');
+    const div11 = document.createElement('div');
+    const div12 = document.createElement('div');
+    const div13 = document.createElement('div');
+    div10.textContent = "YOU'LL LEARN";
+    div11.textContent = 'HTML';
+    div12.textContent = 'CSS';
+    div13.textContent = 'JAVASCRIPT';
+
+    statusTop.appendChild(div00);
+    statusTop.appendChild(div01);
+
+    statusBottom.appendChild(div10);
+    statusBottom.appendChild(div11);
+    statusBottom.appendChild(div12);
+    statusBottom.appendChild(div13);
+
+    statusTop.classList.add('status-top');
+    statusBottom.classList.add('status-bottom');
+    status.classList.add('status');
+
+    status.appendChild(statusTop);
+    status.appendChild(statusBottom);
+
+    const iframeBox = document.createElement('div');
+    iframeBox.classList.add('iframebox');
+    status.appendChild(iframeBox);
+
+    largeCol.appendChild(desc);
+    largeCol.appendChild(status);
+
+    largeCol.classList.add('info-grid');
+
+    largeColTop.textContent = 'INFO';
+    largeColTop.classList.add('info-top');
+    
+
 }
 
 function handleCrossClick() {
@@ -248,7 +348,7 @@ function handleCrossClick() {
 
             smallRow.style.gridTemplateColumns = '1.5% 23.125% 1.5% 23.125% 1.5% 23.125% 1.5% 23.125% 1.5%';
             largeRow.style.gridTemplateColumns = '1.5% 23.125% 1.5% 23.125% 1.5% 23.125% 1.5% 23.125% 1.5%';
-            gsap.to(row, {duration: 1.5, height: '35vh'}, 0);
+            gsap.to(row, {duration: 0, height: '35vh'});
 
             fillRowAfterClick(r,c);
         })
@@ -267,8 +367,7 @@ function fillRowAfterClick(r,c) {
     smallCol.classList.add('clickable');
     smallEyeCol.classList.add('clickable');
 
-    bigCol.style.backgroundImage = `url(${data.arr[r].img})`;
-    bigCol.style.backgroundSize = 'cover'
+    insertVideo(bigCol);
     console.log(data.arr[r].img);
     smallCol.textContent = data.arr[r].name;
     smallEyeCol.textContent = 'e';
@@ -276,3 +375,5 @@ function fillRowAfterClick(r,c) {
     const clickables = document.querySelectorAll('.clickable');
     handleEyeClick(clickables);
 }
+
+
